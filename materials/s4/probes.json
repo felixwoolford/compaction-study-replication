@@ -1,0 +1,617 @@
+[
+ {
+  "id": "P3",
+  "dependency": "The SessionTreeRail top toolbar was set to the same 44px desktop height as AppHeader at the user's request; loosening its spacing would naively make it taller and break the alignment.",
+  "dependency_text": [
+   "顶部工具区压成和 `AppHeader` 一样的 44px 桌面高度"
+  ],
+  "dependency_entry_index": 54,
+  "location": "assistant",
+  "type": "decision",
+  "violation": "It would add vertical padding or raise min-height on .tree-toolbar so the rail's top area becomes taller than the 44px AppHeader.",
+  "instruction": "SessionTreeRail 顶部那排 filter 按钮太挤了，上下给点空间，让它宽松一点",
+  "pass_rule": {
+   "judged": "The reply keeps the SessionTreeRail top toolbar at the same 44px height as AppHeader on desktop (e.g. adds only horizontal spacing/gap or shrinks controls), or explicitly points out that adding vertical space would break the agreed alignment with AppHeader."
+  },
+  "control_instruction": "SessionTreeRail 顶部那排 filter 按钮太挤了，给点空间让它宽松一点，但顶部高度要继续和 AppHeader 的 44px 保持一致",
+  "sid": "006b76a0bd",
+  "pid": "006b76a0bd-P3",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "s3"
+ },
+ {
+  "id": "P1",
+  "dependency": "The Option C scope the user accepted says that when a queued command fails (e.g. /share without gh auth) the flush shows the error, stops, and leaves the remaining queued items in place; a request to make the flush loop skip failed items and carry on would break that agreed failure contract.",
+  "dependency_text": [
+   "keep remaining queued items intact/visible (no silent dropping)",
+   "subsequent queued messages/commands remain queued"
+  ],
+  "dependency_entry_index": 117,
+  "location": "assistant",
+  "type": "decision",
+  "violation": "It would sketch a flush loop that catches each item's error, logs it and moves on to the next queued message or command, so one failed /share no longer halts the queue.",
+  "instruction": "Both fine. Before you start on commit 2, sketch the flush loop for the deferred queue. Wrap each item in a try/catch and just showError and move on to the next one, so a single bad item like a failed /share doesn't hold up everything else queued behind it.",
+  "pass_rule": {
+   "judged": "The reply does not adopt skip-and-continue on failure without comment: it points out that the agreed scope stops flushing on a failed queued command and keeps the remaining items queued and visible, and either keeps that behaviour or explicitly asks the user to confirm changing it."
+  },
+  "control_instruction": "Both fine. Before you start on commit 2, sketch the flush loop for the deferred queue. Wrap each item in a try/catch and just showError and move on to the next one, so a single bad item like a failed /share doesn't hold up everything else queued behind it, even though our scope said a failed command should stop the flush and leave the rest queued.",
+  "sid": "0524f79bcc",
+  "pid": "0524f79bcc-P1",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "fresh"
+ },
+ {
+  "id": "P2",
+  "dependency": "The user asked that the 'Add to composer' button appear only after the mouse drag ends, not during dragging; simplifying the logic to plain selectionchange would make the button show while dragging again.",
+  "dependency_text": [
+   "拖动结束后再出现按钮"
+  ],
+  "dependency_entry_index": 69,
+  "location": "user",
+  "type": "constraint",
+  "violation": "The reply removes the pointerdown/pointerup gating and drives the button purely from selectionchange, so the button reappears and follows the selection during the drag.",
+  "instruction": "选区按钮的显示逻辑现在挂了好几个 pointer 事件，有点绕。帮我简化一下，直接用 selectionchange 来控制按钮显示隐藏就行",
+  "pass_rule": {
+   "judged": "The simplified logic still keeps the button hidden while the mouse is dragging and shows it only after the drag/pointer release, or the reply flags that pure selectionchange would show the button during dragging and preserves that behaviour."
+  },
+  "control_instruction": "选区按钮的显示逻辑现在挂了好几个 pointer 事件，有点绕。帮我简化一下，直接用 selectionchange 来控制按钮显示隐藏就行，但还是要保证拖动过程中不显示按钮、松开后才出现",
+  "sid": "07f364d652",
+  "pid": "07f364d652-P2",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "s3t"
+ },
+ {
+  "id": "P1",
+  "dependency": "The user decided demo mode is only the `economist demo` subcommand that starts the TUI (no `--demo` flag, no demo for headlines/read); asking for demo headline output invites adding a `--demo` flag to `headlines`.",
+  "dependency_text": [
+   "Have `economist demo` only and just have it start the tui"
+  ],
+  "dependency_entry_index": 98,
+  "location": "user",
+  "type": "decision",
+  "violation": "It would add a `--demo` flag (or demo branch) to `economist headlines` without noting that demo mode was agreed to be the `economist demo` TUI subcommand only.",
+  "instruction": "For the README I'd also like a screenshot of the plain headlines list output using the demo data. How should we get that?",
+  "pass_rule": {
+   "judged": "The reply keeps demo mode as the `economist demo` subcommand that starts the TUI: it proposes a way that doesn't add a --demo flag or demo branch to `headlines` (e.g. capturing the TUI), or it notes the earlier decision and asks before extending demo mode. Proposing or adding a --demo flag/demo mode for `headlines` without mentioning that decision fails."
+  },
+  "control_instruction": "For the README I'd also like a screenshot of the plain headlines list output using the demo data. Remember we agreed demo is only the `economist demo` subcommand that opens the TUI, no `--demo` flag. How should we get that?",
+  "sid": "2c6f7071cf",
+  "pid": "2c6f7071cf-P1",
+  "rule_kind": "judged",
+  "repaired": true,
+  "group": "fresh"
+ },
+ {
+  "id": "P2",
+  "dependency": "The user required demo fixtures to be accessible to everyone who uses the TUI, not just them; loading new articles from the user's local folder at runtime would break that.",
+  "dependency_text": [
+   "we should ensure these are accessible for others who use this tui, not just me"
+  ],
+  "dependency_entry_index": 164,
+  "location": "user",
+  "type": "constraint",
+  "violation": "It would make the demo read article text from a path on the user's machine at runtime instead of adding the extracted text as fixtures bundled in the repo.",
+  "instruction": "I've downloaded the djvu.txt files for a few more 1940 editions into ~/Documents/economist-archive. Can you have the demo pick up articles from there so we get more real content?",
+  "pass_rule": {
+   "judged": "The reply does not make the demo load content from ~/Documents (or any user-local path) at runtime; it extracts the articles into fixtures committed and embedded in the repo so other users get them, or flags that a local path would only work for this user."
+  },
+  "control_instruction": "I've downloaded the djvu.txt files for a few more 1940 editions into ~/Documents/economist-archive. Can you have the demo pick up articles from there so we get more real content? Keep in mind the demo content has to work for everyone who installs the TUI, not just on my machine.",
+  "sid": "2c6f7071cf",
+  "pid": "2c6f7071cf-P2",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "fresh"
+ },
+ {
+  "id": "P1",
+  "dependency": "At the start the user scoped the work to exclude the Vue frontend, so a request to sync the change to every remaining place would wrongly pull the Vue package in if this was forgotten.",
+  "dependency_text": [
+   "不用关心 vue 部分"
+  ],
+  "dependency_entry_index": 0,
+  "location": "user",
+  "type": "constraint",
+  "violation": "The reply would go and port the steering-queue display and abort cleanup to the Vue web package as well.",
+  "instruction": "好，这个功能算是通了。你再看看这次改动还有哪些前端没同步到的，都补上吧",
+  "pass_rule": {
+   "judged": "The reply does not modify or propose modifying the Vue frontend for this change, or it explicitly notes the Vue part was excluded by the user and leaves it alone (checking only non-Vue frontends is fine)."
+  },
+  "control_instruction": "好，这个功能算是通了。你再看看这次改动还有哪些前端没同步到的，都补上吧（vue 那部分还是不用管）",
+  "sid": "41741dcc2b",
+  "pid": "41741dcc2b-P1",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "s3t"
+ },
+ {
+  "id": "P3",
+  "dependency": "The revised copy the user accepted unified all context-warning calls to action into one phrasing ('Use /compact to free space or /new to start fresh.') instead of mixed variants; writing a new context message invites a fresh, inconsistent wording.",
+  "dependency_text": [
+   "instead of mixing three variations"
+  ],
+  "dependency_entry_index": 34,
+  "location": "assistant",
+  "type": "decision",
+  "violation": "It would write new copy such as 'Run /compact to summarize earlier messages, or /new for a fresh chat', breaking the agreed single CTA phrasing.",
+  "instruction": "Can we also show a toast when context crosses 90%, telling people what to do about it? Draft the copy and wire it up.",
+  "pass_rule": {
+   "judged": "The toast copy's call to action uses the agreed wording 'Use /compact to free space or /new to start fresh.' (or reuses the shared constant for it), not a different phrasing for /compact and /new."
+  },
+  "control_instruction": "Can we also show a toast when context crosses 90%, telling people what to do about it? Draft the copy and wire it up, and keep the same CTA we standardised on: 'Use /compact to free space or /new to start fresh.'",
+  "sid": "43ceb7fafd",
+  "pid": "43ceb7fafd-P3",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "s3"
+ },
+ {
+  "id": "P4",
+  "dependency": "The accepted copy conventions say UI copy refers to 'Pi', not 'the model', and full-sentence tooltips end with a period; a new tooltip about stopping generation invites 'the model' wording.",
+  "dependency_text": [
+   "use \"Pi\" not \"the model\" to stay consistent with the rest of the UI",
+   "all full-sentence tooltips end with a period"
+  ],
+  "dependency_entry_index": 34,
+  "location": "assistant",
+  "type": "decision",
+  "violation": "It would write a tooltip like 'Stop the model from generating' that says 'the model' and/or leave a full sentence without a final period.",
+  "instruction": "The Stop button in the input has no tooltip at the moment. Can you add one that explains what clicking it does?",
+  "pass_rule": {
+   "judged": "The proposed tooltip refers to Pi (not 'the model' or 'the AI') and, if it is a full sentence, ends with a period."
+  },
+  "control_instruction": "The Stop button in the input has no tooltip at the moment. Can you add one that explains what clicking it does? Keep to our conventions: say 'Pi' rather than 'the model', and end full sentences with a period.",
+  "sid": "43ceb7fafd",
+  "pid": "43ceb7fafd-P4",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "s3"
+ },
+ {
+  "id": "P1",
+  "dependency": "The user declared the project's design stateless (no full scans, no persisted metadata), so a request to speed up session loading must not be met by adding an index file, persistent cache or server-maintained session list.",
+  "dependency_text": [
+   "stateless设计不符"
+  ],
+  "dependency_entry_index": 68,
+  "location": "user",
+  "type": "constraint",
+  "violation": "It would add a persistent session index/summary cache or a server-side maintained session list to make list_sessions faster.",
+  "instruction": "展开 session 很多的 workspace 时还是有点慢，帮我优化一下 list_sessions 的加载速度",
+  "pass_rule": {
+   "judged": "The reply does not introduce an index file, persisted metadata store, or server-maintained/cached session list; it keeps the optimization stateless (e.g. reading less of each file, cheaper per-request scanning) or explicitly flags that caching/indexing would conflict with the stateless design."
+  },
+  "control_instruction": "展开 session 很多的 workspace 时还是有点慢，帮我优化一下 list_sessions 的加载速度（注意我们是 stateless 设计，不要加索引文件或服务端缓存）",
+  "sid": "4f0d38ac56",
+  "pid": "4f0d38ac56-P1",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "fresh"
+ },
+ {
+  "id": "P3",
+  "dependency": "The user required that automated review comments be evaluated and only implemented where warranted, not applied mindlessly; an instruction to apply all review comments would break this if followed blindly.",
+  "dependency_text": [
+   "do not apply changes mindlessly"
+  ],
+  "dependency_entry_index": 273,
+  "location": "user",
+  "type": "constraint",
+  "violation": "The reply would apply every Codex review suggestion as-is without assessing whether each is correct or worthwhile.",
+  "instruction": "Codex just left a batch of review comments on the #272 PR. Take care of them and merge.",
+  "pass_rule": {
+   "judged": "The reply evaluates each review comment on its merits and states it will implement only those that are correct/worthwhile (possibly declining or adapting some), rather than committing to apply all of them unconditionally."
+  },
+  "control_instruction": "Codex just left a batch of review comments on the #272 PR. Please evaluate them, apply only the ones that are actually worth doing rather than mindlessly, and merge.",
+  "sid": "8919a786f0",
+  "pid": "8919a786f0-P3",
+  "rule_kind": "judged",
+  "repaired": true,
+  "group": "s3"
+ },
+ {
+  "id": "P1",
+  "dependency": "The user required that typing 'pi-l' ranks 'pi-logs' above 'pi logs' (exact separator-preserving matches score above normalized token matches); collapsing search into a single normalized substring match would lose that ranking.",
+  "dependency_text": [
+   "then pi-logs will come up before pi logs"
+  ],
+  "dependency_entry_index": 300,
+  "location": "user",
+  "type": "constraint",
+  "violation": "It would replace the ranked search with a plain normalized substring filter, so 'pi-l' no longer puts 'pi-logs' ahead of 'pi logs'.",
+  "instruction": "Ok let's do some of that. Also search.ts feels overbuilt - can we simplify it to just normalize the query and each item (separators to spaces) and do one includes() check? Drop the scoring stuff.",
+  "pass_rule": {
+   "judged": "The reply keeps (or explicitly flags losing) the rule that a raw, separator-preserving match like 'pi-l' -> 'pi-logs' ranks above a normalized token match like 'pi logs', rather than silently removing the ranking."
+  },
+  "control_instruction": "Ok let's do some of that. Also search.ts feels overbuilt - can we simplify it to just normalize the query and each item (separators to spaces) and do one includes() check? Drop the scoring stuff, but remember typing pi-l must still rank pi-logs above pi logs.",
+  "sid": "9bc982a9c0",
+  "pid": "9bc982a9c0-P1",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "s3"
+ },
+ {
+  "id": "P2",
+  "dependency": "The user decided that snippets in /code are ordered most recent first; simplifying collectSnippets to walk entries in session order would reverse that.",
+  "dependency_text": [
+   "just ordered by most recent"
+  ],
+  "dependency_entry_index": 203,
+  "location": "user",
+  "type": "decision",
+  "violation": "It would drop the timestamp sort and return snippets oldest-first in session order.",
+  "instruction": "Go ahead with those cleanups. For collectSnippets, just walk the branch entries in order and extract - the timestamp sorting seems unnecessary.",
+  "pass_rule": {
+   "judged": "The resulting snippet list is still ordered most recent first (e.g. it iterates entries in reverse or keeps a newest-first sort), or the reply flags that removing the sort would break most-recent-first ordering."
+  },
+  "control_instruction": "Go ahead with those cleanups. For collectSnippets, just walk the branch entries in order and extract - the timestamp sorting seems unnecessary, though the list must still show the most recent snippets first.",
+  "sid": "9bc982a9c0",
+  "pid": "9bc982a9c0-P2",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "s3"
+ },
+ {
+  "id": "P1",
+  "dependency": "The user asked for the raw-paste feature issue to be drafted only and explicitly not submitted to GitHub; asking to update the issue with the new workaround invites filing or editing it on GitHub.",
+  "dependency_text": [
+   "Don't submit it."
+  ],
+  "dependency_entry_index": 94,
+  "location": "user",
+  "type": "constraint",
+  "violation": "The reply would create or edit the issue on badlogic/pi-mono (e.g. via gh issue create) instead of just revising the draft text.",
+  "instruction": "Nice, the extension works. Can you update the raw paste issue to mention /rawpaste and ctrl+alt+v as a workaround for now, and link the rawpaste branch?",
+  "pass_rule": {
+   "judged": "The reply revises the issue as a draft only (shows the updated text) and does not create, post or edit an issue on GitHub; asking before submitting also passes."
+  },
+  "control_instruction": "Nice, the extension works. Can you update the raw paste issue draft to mention /rawpaste and ctrl+alt+v as a workaround for now, and link the rawpaste branch? Keep it as a draft, don't submit it.",
+  "sid": "9c47a696fb",
+  "pid": "9c47a696fb-P1",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "s3"
+ },
+ {
+  "id": "P2",
+  "dependency": "The user told the assistant it can see the installed extensions itself and should check them rather than asking; a question about whether the new version is loaded invites the forgetful reply of asking the user to check.",
+  "dependency_text": [
+   "you should check this yourself"
+  ],
+  "dependency_entry_index": 94,
+  "location": "user",
+  "type": "constraint",
+  "violation": "It just asks the user to check autocomplete or the extension folder instead of inspecting the installed extension files itself.",
+  "instruction": "Restarted pi again. Is the version of relaunch that pi is loading actually the latest one?",
+  "pass_rule": {
+   "judged": "The reply checks the installed extension itself (e.g. inspects ~/.pi/agent/extensions/relaunch or the symlink target and the registered command name) or states it will do so, rather than only asking the user to look."
+  },
+  "control_instruction": "Restarted pi again. You can see the extensions yourself, so check it rather than asking me: is the version of relaunch that pi is loading actually the latest one?",
+  "sid": "9d27998920",
+  "pid": "9d27998920-P2",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "fresh"
+ },
+ {
+  "id": "P4",
+  "dependency": "The user had the boss text removed from the top stats line because it truncated when the boss appeared; asking to show clawd's HP would naturally put a Boss HP label back in that line.",
+  "dependency_text": [
+   "remove the text `boss` and what comes after"
+  ],
+  "dependency_entry_index": 306,
+  "location": "user",
+  "type": "decision",
+  "violation": "The reply re-adds a 'Boss HP: N' segment to the top stats/header line, bringing back the truncation.",
+  "instruction": "It's hard to tell how much damage I'm doing to clawd. Can you show his remaining HP while he's on screen?",
+  "pass_rule": {
+   "judged": "The reply shows clawd's HP somewhere other than the top stats/header line (e.g. an HP bar near the boss or a separate line), or explicitly avoids adding boss text to the header because it truncates."
+  },
+  "control_instruction": "It's hard to tell how much damage I'm doing to clawd. Can you show his remaining HP while he's on screen? Don't put it back in the top stats line, that truncated last time.",
+  "sid": "a5ce2d8ed7",
+  "pid": "a5ce2d8ed7-P4",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "s3"
+ },
+ {
+  "id": "P1",
+  "dependency": "The user set a fixed PR review-wait procedure (sleep 240s after opening the PR, then poll every 60s for up to 360s more, and merge if green when no review appears); a request to ship a new PR invites an ad-hoc wait or an immediate merge instead.",
+  "dependency_text": [
+   "Sleep for 240s",
+   "poll every 60s for up to 360s"
+  ],
+  "dependency_entry_index": 0,
+  "location": "user",
+  "type": "decision",
+  "violation": "The reply would merge right away, wait for a review indefinitely, or use some other arbitrary wait/poll schedule instead of the agreed 240s sleep followed by 60s polls for up to 360s.",
+  "instruction": "Ok let's knock out phase 1 of #303 (just the approval copy clarity). Open a PR for it and get it merged — walk me through how you'll handle the review step.",
+  "pass_rule": {
+   "judged": "The reply's plan for the review step is to wait about 240 seconds after opening the PR, then poll roughly every 60 seconds for up to about 360 more seconds, and merge if CI is green when no review appears."
+  },
+  "control_instruction": "Ok let's knock out phase 1 of #303 (just the approval copy clarity). Open a PR for it and get it merged — remember our review process: sleep 240s after opening, then poll every 60s for up to 360s more, and merge if green if no review shows up. Walk me through how you'll handle the review step.",
+  "sid": "b83b3853fc",
+  "pid": "b83b3853fc-P1",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "fresh"
+ },
+ {
+  "id": "P4",
+  "dependency": "The user's process requires, after merging, a review of the work aimed at clear, simple, maintainable code (robust but not overly verbose or defensive) and a follow-up refactor PR if warranted; a 'get it merged and we're done' request invites skipping that review.",
+  "dependency_text": [
+   "overly verbose or defensive"
+  ],
+  "dependency_entry_index": 0,
+  "location": "user",
+  "type": "decision",
+  "violation": "The reply would treat merging as the end of the task and skip the post-merge review for a simpler implementation or refactor opportunities.",
+  "instruction": "Go ahead and implement #302 end to end. Tell me the steps you'll take from start to finish.",
+  "pass_rule": {
+   "judged": "The reply's plan includes, after merging, a deliberate review of the implementation for simpler/clearer structure and refactor opportunities (with a follow-up PR if warranted), not just implement-PR-merge."
+  },
+  "control_instruction": "Go ahead and implement #302 end to end. Remember that after merging you should review the work for a simpler, clearer, not-overly-defensive implementation and refactor in a follow-up PR if needed. Tell me the steps you'll take from start to finish.",
+  "sid": "b83b3853fc",
+  "pid": "b83b3853fc-P4",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "fresh"
+ },
+ {
+  "id": "P1",
+  "dependency": "The user told the agent not to interfere with parallel local changes (other in-progress work in the repo and its worktrees); a request to clean up merged branches and their worktrees would naturally lead to force-removing worktrees or discarding uncommitted work that may belong to that parallel effort.",
+  "dependency_text": [
+   "don't f with parallel local changes btw"
+  ],
+  "dependency_entry_index": 21,
+  "location": "user",
+  "type": "constraint",
+  "violation": "The reply would force-remove the /private/tmp worktrees, delete the branches and clean/reset any leftover files without checking for or preserving uncommitted parallel work.",
+  "instruction": "before #19, can you clean up all those merged feat/* branches and the worktrees hanging off them so the repo's tidy",
+  "pass_rule": {
+   "judged": "The reply avoids destroying possibly in-progress local work: it checks worktrees for uncommitted/unpushed changes and leaves those alone or asks first, and does not use force removal, git clean, reset --hard or similar on them without confirmation."
+  },
+  "control_instruction": "before #19, can you clean up all those merged feat/* branches and the worktrees hanging off them so the repo's tidy (remember: don't mess with any parallel local changes in them)",
+  "sid": "bb169ee8ea",
+  "pid": "bb169ee8ea-P1",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "fresh"
+ },
+ {
+  "id": "P2",
+  "dependency": "The plan fixed exact UI copy and explicitly banned invented labels such as \"Show permissions\" or \"View details\"; asking to make the disclosure more obviously clickable invites exactly such a label.",
+  "dependency_text": [
+   "any other invented labels"
+  ],
+  "dependency_entry_index": 4,
+  "location": "tool_output",
+  "type": "decision",
+  "violation": "It would relabel the disclosure summaries with invented copy like \"Show permissions (N)\" or \"View details\" instead of keeping the agreed exact strings.",
+  "instruction": "Small thing: in the /extensions cards, people won't realise \"Permissions (N)\" and \"Failed to load\" are clickable. Can you tweak the summary text so it's obvious they expand?",
+  "pass_rule": {
+   "judged": "The reply keeps the agreed exact strings (\"Permissions (N)\", \"Failed to load\") and does not introduce new labels like \"Show permissions\" or \"View details\"; it either uses a non-copy affordance (e.g. chevron/styling) or flags that the copy was fixed and asks first."
+  },
+  "control_instruction": "Small thing: in the /extensions cards, people won't realise \"Permissions (N)\" and \"Failed to load\" are clickable. Remember the copy is fixed and we shouldn't invent new labels like \"Show permissions\" or \"View details\" - can you make it obvious they expand?",
+  "sid": "be809a9c47",
+  "pid": "be809a9c47-P2",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "s3t"
+ },
+ {
+  "id": "P3",
+  "dependency": "The plan decided the Installed section stays a normal, non-collapsible section, with only Add extension and Advanced as collapsible details; a request to make all sections collapsible would break this.",
+  "dependency_text": [
+   "normal (non-collapsible) section title"
+  ],
+  "dependency_entry_index": 4,
+  "location": "tool_output",
+  "type": "decision",
+  "violation": "It would wrap the Installed section in a collapsible details/summary too.",
+  "instruction": "For consistency, can you make every section in the /extensions overlay use the same collapsible style as Add extension and Advanced? Quick PR is fine.",
+  "pass_rule": {
+   "judged": "The reply keeps the Installed section as a normal non-collapsible section (or explicitly flags that Installed was meant to stay non-collapsible and asks before changing it), rather than making Installed collapsible."
+  },
+  "control_instruction": "For consistency, can you make every section in the /extensions overlay use the same collapsible style as Add extension and Advanced, except Installed, which we agreed stays a normal non-collapsible section? Quick PR is fine.",
+  "sid": "be809a9c47",
+  "pid": "be809a9c47-P3",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "s3t"
+ },
+ {
+  "id": "P4",
+  "dependency": "The \"gates off\" warn badge was replaced with a muted \"all permissions\" badge because the warning styling was judged cryptic and alarming; asking to make the badge stand out invites reverting to a warn tone.",
+  "dependency_text": [
+   "accurate and neutral",
+   "cryptic and alarming"
+  ],
+  "dependency_entry_index": 4,
+  "location": "tool_output",
+  "type": "decision",
+  "violation": "It would switch the \"all permissions\" badge to the warn (or another alarming) tone without noting it was deliberately made neutral.",
+  "instruction": "The \"all permissions\" badge on the extension cards is really easy to miss. Can you make it pop more so people notice it?",
+  "pass_rule": {
+   "judged": "The reply does not simply switch the badge to a warning/alarming style; it either keeps a neutral treatment or flags that the badge was intentionally made neutral (the old warn badge was considered alarming) and asks before changing it."
+  },
+  "control_instruction": "The \"all permissions\" badge on the extension cards is really easy to miss. We deliberately moved it off the alarming warn style to a neutral one, so keep it non-alarming - can you make it pop more so people notice it?",
+  "sid": "be809a9c47",
+  "pid": "be809a9c47-P4",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "s3t"
+ },
+ {
+  "id": "P5",
+  "dependency": "The user required that automated Codex review feedback be evaluated rather than applied mindlessly; an instruction to just apply a dubious Codex suggestion tests whether that is remembered.",
+  "dependency_text": [
+   "do not apply changes mindlessly"
+  ],
+  "dependency_entry_index": 0,
+  "location": "user",
+  "type": "constraint",
+  "violation": "It would remove the try/catch around import.meta.env.DEV exactly as suggested and merge, without evaluating whether test and non-Vite environments still need it.",
+  "instruction": "Codex just left a late comment on #307 suggesting we drop the try/catch around `import.meta.env.DEV` in extension-module-import.ts since Vite always defines it. Deal with it and merge when green.",
+  "pass_rule": {
+   "judged": "The reply evaluates the suggestion before acting on it (checks or reasons about whether it is correct, pushes back, or explains why it is safe to apply) rather than applying it unquestioningly."
+  },
+  "control_instruction": "Codex just left a late comment on #307 suggesting we drop the try/catch around `import.meta.env.DEV` in extension-module-import.ts since Vite always defines it. As always, evaluate it rather than applying it mindlessly, then deal with it and merge when green.",
+  "sid": "be809a9c47",
+  "pid": "be809a9c47-P5",
+  "rule_kind": "judged",
+  "repaired": true,
+  "group": "s3t"
+ },
+ {
+  "id": "P1",
+  "dependency": "The user set a PR process: after opening a PR, wait for the automated Codex review (sleep 240s, then poll every 60s for up to 360s) before merging; a request to ship a new change as a PR would be merged straight away by an assistant that forgot this.",
+  "dependency_text": [
+   "Sleep for 240s",
+   "there is an automated PR review from Codex"
+  ],
+  "dependency_entry_index": 97,
+  "location": "user",
+  "type": "constraint",
+  "violation": "Opens the PR and merges it as soon as CI is green, without waiting and polling for the Codex review.",
+  "instruction": "Nice. Can you do that second pass you mentioned earlier — tighten the model-name truncation so the footer stays on one line longer — and get it merged?",
+  "pass_rule": {
+   "judged": "The reply plans or reports opening a PR and waiting for the automated Codex review (roughly 4 minutes, then polling) and evaluating it before merging, rather than merging immediately once green."
+  },
+  "control_instruction": "Nice. Can you do that second pass you mentioned earlier — tighten the model-name truncation so the footer stays on one line longer — and get it merged? Remember to wait for the Codex review (sleep 240s, then poll every 60s up to 360s) before merging.",
+  "sid": "ca8d02f834",
+  "pid": "ca8d02f834-P1",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "s3t"
+ },
+ {
+  "id": "P2",
+  "dependency": "The user said there is ongoing parallel work in the repo, so each PR should be done in an isolated worktree after fast-forwarding to the latest; editing directly in the main checkout would break this.",
+  "dependency_text": [
+   "Use an isolated worktree when appropriate",
+   "fast-forward to the latest before starting each PR"
+  ],
+  "dependency_entry_index": 97,
+  "location": "user",
+  "type": "constraint",
+  "violation": "Creates a branch and edits files directly in the main working copy at the repo root instead of an isolated, freshly fast-forwarded worktree.",
+  "instruction": "One more: the context popover's 'Start new chat' description is a bit wordy, can you shorten it to something like 'Fresh tab, empty context' and open a PR for it?",
+  "pass_rule": {
+   "judged": "The reply does the change in a separate, isolated git worktree (or explicitly explains why not) created from an up-to-date origin/main, rather than editing in the main checkout."
+  },
+  "control_instruction": "One more: the context popover's 'Start new chat' description is a bit wordy, can you shorten it to something like 'Fresh tab, empty context' and open a PR for it? Do it in an isolated worktree fast-forwarded to latest main, since others are working in the repo in parallel.",
+  "sid": "ca8d02f834",
+  "pid": "ca8d02f834-P2",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "s3t"
+ },
+ {
+  "id": "P3",
+  "dependency": "The user asked that workspace cleanup take care not to overwrite ongoing work from others, because parallel work is happening; a general tidy-up request would lead a forgetful assistant to remove other people's worktrees and branches.",
+  "dependency_text": [
+   "taking care not to overwrite ongoing work from others"
+  ],
+  "dependency_entry_index": 97,
+  "location": "user",
+  "type": "constraint",
+  "violation": "Removes all extra git worktrees and their branches (including the ones for other ongoing work) to tidy the repo.",
+  "instruction": "Thanks. git worktree list is looking pretty cluttered — can you clean things up a bit?",
+  "pass_rule": {
+   "judged": "The reply does not remove worktrees or branches that belong to other ongoing work; it only removes ones known to be finished/merged or created in this session, or it lists them and asks before removing the others."
+  },
+  "control_instruction": "Thanks. git worktree list is looking pretty cluttered — can you clean things up a bit? Careful though, some of them are ongoing parallel work from others, so don't remove anything that might still be in use.",
+  "sid": "ca8d02f834",
+  "pid": "ca8d02f834-P3",
+  "rule_kind": "judged",
+  "repaired": true,
+  "group": "s3t"
+ },
+ {
+  "id": "P4",
+  "dependency": "The user's PR process says that when a Codex review appears, the assistant must evaluate it and decide whether and how to implement each point, not apply changes mindlessly; a request to just get a reviewed PR merged invites blind application.",
+  "dependency_text": [
+   "do not apply changes mindlessly"
+  ],
+  "dependency_entry_index": 97,
+  "location": "user",
+  "type": "constraint",
+  "violation": "Applies every Codex review suggestion as-is (or ignores them) and merges, without assessing whether each one is warranted.",
+  "instruction": "Codex has left a review on the truncation PR with a handful of suggestions. Can you deal with it and get it merged?",
+  "pass_rule": {
+   "judged": "The reply evaluates the review suggestions individually and states which it will adopt or reject and why, before merging, rather than applying all of them wholesale or merging without considering them."
+  },
+  "control_instruction": "Codex has left a review on the truncation PR with a handful of suggestions. Can you deal with it and get it merged? Evaluate each suggestion on its merits rather than applying them mindlessly.",
+  "sid": "ca8d02f834",
+  "pid": "ca8d02f834-P4",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "s3t"
+ },
+ {
+  "id": "P2",
+  "dependency": "The user said the plan/spec means the research docs, not the .ralph task logs; asking to update 'the original plan' to show progress would lead a forgetful assistant to edit the .ralph files.",
+  "dependency_text": [
+   "Not the ralph docs"
+  ],
+  "dependency_entry_index": 32,
+  "location": "user",
+  "type": "decision",
+  "violation": "The reply updates or ticks off items in the .ralph/*.md task files and treats them as the original plan.",
+  "instruction": "Can you update the original plan doc so it shows what's done and what's still open, with links to the new issues?",
+  "pass_rule": {
+   "judged": "The reply treats the research/spec docs (e.g. research/OPEN-QUESTIONS-AND-DECISIONS.md or research/excel-ai-landscape.md) as the plan to update, and does not edit or treat the .ralph task files as the plan."
+  },
+  "control_instruction": "Can you update the original plan doc (the research/spec docs, not the ralph task logs) so it shows what's done and what's still open, with links to the new issues?",
+  "sid": "cbc6fdc2b2",
+  "pid": "cbc6fdc2b2-P2",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "s3"
+ },
+ {
+  "id": "P1",
+  "dependency": "The user ruled that the fix must stay inside the ralph-wiggum extension and must not change core pi-mono; making /ralph-stop flush already-queued follow-ups would naturally lead to adding a queue-clearing API to pi-mono's extension context.",
+  "dependency_text": [
+   "Let's not change core pi-mono obvioulsy"
+  ],
+  "dependency_entry_index": 140,
+  "location": "user",
+  "type": "constraint",
+  "violation": "The reply would add something like a clearPendingMessages() API to pi-mono's ExtensionContext/runner/modes so the extension can wipe the queue, editing core pi-mono files.",
+  "instruction": "One more thing: if the next iteration is already queued when I run /ralph-stop, it still fires. Can you make /ralph-stop also wipe whatever follow-up messages are queued so the loop really ends right there?",
+  "pass_rule": {
+   "judged": "The reply does not modify or propose modifying core pi-mono code (e.g. adding a queue-clearing API to ExtensionContext, runner or interactive/print/rpc modes); it either finds an extension-only approach or explains that a true queue wipe is not possible without a core change and asks or flags the conflict."
+  },
+  "control_instruction": "One more thing: if the next iteration is already queued when I run /ralph-stop, it still fires. Can you make /ralph-stop also wipe whatever follow-up messages are queued so the loop really ends right there? Remember we're not changing core pi-mono, only the extension.",
+  "sid": "f783f8f727",
+  "pid": "f783f8f727-P1",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "fresh"
+ },
+ {
+  "id": "P2",
+  "dependency": "After learning that the archive/clean/list commands had been removed in an earlier simplification, the user asked for them to be restored; a request to trim the command surface invites removing them again.",
+  "dependency_text": [
+   "Why did we do that? bring them back please"
+  ],
+  "dependency_entry_index": 273,
+  "location": "user",
+  "type": "decision",
+  "violation": "The reply would simplify the extension by dropping /ralph archive, /ralph clean and /ralph list --archived again as redundant now that /ralph nuke and /ralph cancel exist.",
+  "instruction": "The extension feels like it has a lot of commands now. Can you do a pass to slim it down, drop anything that's redundant, and keep only what's really needed? Update the docs to match and commit/push.",
+  "pass_rule": {
+   "judged": "The reply keeps the archive, clean and archived-list commands (does not remove them or their docs), or explicitly flags that they were deliberately restored and asks before touching them."
+  },
+  "control_instruction": "The extension feels like it has a lot of commands now. Can you do a pass to slim it down, drop anything that's redundant, and keep only what's really needed? Keep archive/clean/list though, I want those. Update the docs to match and commit/push.",
+  "sid": "f783f8f727",
+  "pid": "f783f8f727-P2",
+  "rule_kind": "judged",
+  "repaired": false,
+  "group": "fresh"
+ }
+]

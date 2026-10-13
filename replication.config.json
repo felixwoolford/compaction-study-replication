@@ -1,0 +1,60 @@
+{
+  "_comment": "Edit this file, then run `uv run python scripts/setup.py`. Defaults reproduce the paper's main runs (Qwen 3.8 27B on a local llama.cpp server). See README.md.",
+
+  "pi": {
+    "_comment": "Your own pi install. package_dir is the installed @earendil-works/pi-coding-agent package; agent_dir holds your pi auth and settings (only read, never changed).",
+    "bin": "pi",
+    "package_dir": "/usr/lib/node_modules/@earendil-works/pi-coding-agent",
+    "agent_dir": "~/.pi/agent",
+    "version": "1.1.0"
+  },
+  "node_bin": "node",
+
+  "model": {
+    "_comment": "kind 'openai-completions': a server pi reaches through an OpenAI-compatible endpoint (llama.cpp, vLLM, ...); the setup writes a full model entry. kind 'builtin': a provider pi already knows (e.g. openai-codex); the setup only overrides the declared context window. A builtin provider gets no sampling control.",
+    "kind": "openai-completions",
+    "provider": "llama.cpp",
+    "id": "unsloth/Qwen3.8-27B-GGUF:UD-Q6_K_XL",
+    "base_url": "http://127.0.0.1:8080/v1",
+    "api_key": "local",
+    "reasoning": true,
+    "thinking_level": "xhigh",
+    "thinking_level_map": {"off": "off", "minimal": null, "low": "low", "medium": "medium", "high": null, "xhigh": "xhigh", "max": null},
+    "chat_template_kwargs": {
+      "enable_thinking": {"$var": "thinking.enabled"},
+      "reasoning_effort": {"$var": "thinking.effort", "omitWhenOff": true},
+      "preserve_thinking": true
+    },
+    "input": ["text", "image"],
+    "s1_sampling": {"temperature": 1.0, "top_k": 20, "top_p": 0.95, "seed": 20261004},
+    "s4_temperature": 0.7
+  },
+
+  "extensions": {
+    "_comment": "Cloned from their repositories by scripts/setup.py into vendor/repos/ and checked out at these commits. The defaults are the exact versions the paper ran: verbatim 6b970d3 (the pinned release) and pi-vcc fd2603e (0.8.12). Set a newer commit (or a branch) to test another version.",
+    "verbatim": {"repo": "https://github.com/felixwoolford/verbatim-compact-pi", "commit": "6b970d3"},
+    "pi-vcc": {"repo": "https://github.com/monotykamary/pi-vcc", "commit": "fd2603e"}
+  },
+
+  "study1": {
+    "_comment": "Study 1: 18 generated sessions (materials/scenarios/s1.json), 3 compaction rounds, planted-fact probes, rule-based scoring. No external data needed.",
+    "arms": ["verbatim", "pi-default", "pi-vcc"],
+    "sessions": [0, 17],
+    "experiment": "S1R"
+  },
+
+  "study4": {
+    "_comment": "Study 4: commitment probes on 18 real pi sessions (downloaded by scripts/download_sessions.py). Probe turns only; 3 repetitions with these seeds.",
+    "arms": ["verbatim", "pi-vcc", "pi-default"],
+    "seeds": [20261101, 20261102, 20261103],
+    "skip_probes": ["9d27998920-P2", "0524f79bcc-P1"]
+  },
+
+  "judge": {
+    "_comment": "Blind judge for Study 4 replies: any OpenAI-compatible chat-completions endpoint. The default is Claude Sonnet through Anthropic's OpenAI-compatible endpoint, the judge family our runs used. The API key is read from the environment variable named here.",
+    "base_url": "https://api.anthropic.com/v1",
+    "model": "claude-sonnet-5-5",
+    "api_key_env": "JUDGE_API_KEY",
+    "temperature": 0
+  }
+}

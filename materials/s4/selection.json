@@ -1,0 +1,153 @@
+{
+ "selected": [
+  {
+   "file": "woxQAQ-pi-web-2026-05-07T17-37-14-153Z_11ad12ac-ce9d-484d-b74a-3f2110014f03.jsonl",
+   "src": "woxQAQ/pi-web",
+   "licence": "MIT",
+   "tokens": 150929,
+   "sid": "006b76a0bd",
+   "sha256": "2abc9d34559d316dc465e1d85a82df9da9ce3867f8187a2d092d24a79398f0c8"
+  },
+  {
+   "file": "thomasmustier-pi-for-excel-sessions-2026-02-21T13-14-10-058Z_a3b138d9-ca40-44b7-b1e5-c62d7071e462.jsonl",
+   "src": "thomasmustier/pi-for-excel-sessions",
+   "licence": "MIT",
+   "tokens": 133272,
+   "sid": "43ceb7fafd",
+   "sha256": "e4ca74ae8f43366f63b3597242ae5f40bfa971aacb44c877451ca19af1e2d2c0"
+  },
+  {
+   "file": "thomasmustier-pi-for-excel-sessions-2026-02-15T09-43-41-194Z_1b29db6f-47cd-4c23-b06d-ab63fc0043f4.jsonl",
+   "src": "thomasmustier/pi-for-excel-sessions",
+   "licence": "MIT",
+   "tokens": 207951,
+   "sid": "8919a786f0",
+   "sha256": "7a63c7fd63af90d5dcb44c229ab92fa4968270ca69c08133619b13cf6742c6ab"
+  },
+  {
+   "file": "thomasmustier-pi-extensions-sessions-2026-01-08T21-46-59-017Z_ffe85f37-529d-4377-97e6-28414837b7b0.jsonl",
+   "src": "thomasmustier/pi-extensions-sessions",
+   "licence": "MIT",
+   "tokens": 155005,
+   "sid": "9bc982a9c0",
+   "sha256": "e492019ef53760472f734e340dd0e298bb988a7f85b07af648f9d33c136ef268"
+  },
+  {
+   "file": "thomasmustier-pi-extensions-sessions-2026-01-08T12-19-04-701Z_b8ecbbbe-3349-47f7-868d-e0533d4e86f9.jsonl",
+   "src": "thomasmustier/pi-extensions-sessions",
+   "licence": "MIT",
+   "tokens": 130766,
+   "sid": "9c47a696fb",
+   "sha256": "848af05a17d5bbb68408dad3cf53b5034b4392909cbba93129aeaaa741e07d57"
+  },
+  {
+   "file": "thomasmustier-pi-extensions-sessions-2026-01-06T18-15-56-561Z_dfa16b27-70de-4057-b907-5beb49e5d4c3.jsonl",
+   "src": "thomasmustier/pi-extensions-sessions",
+   "licence": "MIT",
+   "tokens": 193745,
+   "sid": "a5ce2d8ed7",
+   "sha256": "833819da96cac64c72d7ffed779eabef6fe67aca42b463c567b3ccc8440f8842"
+  },
+  {
+   "file": "thomasmustier-pi-for-excel-sessions-2026-02-05T22-50-11-983Z_0b8720e5-959a-4b84-8d71-025055d070b6.jsonl",
+   "src": "thomasmustier/pi-for-excel-sessions",
+   "licence": "MIT",
+   "tokens": 136687,
+   "sid": "cbc6fdc2b2",
+   "sha256": "5223cf99a7facc97e422ca873adfbbbe7f699028de91c629fa7e4561968cf271"
+  },
+  {
+   "file": "woxQAQ-pi-web-2026-05-05T10-15-51-478Z_019df7a3-0db6-748a-9c94-81ba29fbaa42.jsonl",
+   "src": "woxQAQ/pi-web",
+   "licence": "MIT",
+   "tokens": 150541,
+   "sid": "07f364d652",
+   "sha256": "c78f5c4b9fc2ab82a268b00edcdacebd7fb752049c4e3ef4d12cbb0b18bd63aa"
+  },
+  {
+   "file": "woxQAQ-pi-web-2026-05-07T11-08-43-227Z_019e0220-2b5a-72ed-8f6f-b7f31390b414.jsonl",
+   "src": "woxQAQ/pi-web",
+   "licence": "MIT",
+   "tokens": 166105,
+   "sid": "41741dcc2b",
+   "sha256": "be3475b418e4246df4831697c04cbd083641a99219958e521161e4fe68b0aea5"
+  },
+  {
+   "file": "thomasmustier-pi-for-excel-sessions-2026-02-15T13-54-55-458Z_431bd315-9ac7-4a48-93bb-b84046e46d3d.jsonl",
+   "src": "thomasmustier/pi-for-excel-sessions",
+   "licence": "MIT",
+   "tokens": 179598,
+   "sid": "be809a9c47",
+   "sha256": "e1f87f18104b8bcdd61d2592f819517479b12a71acb5b60dd4910e93269566a4"
+  },
+  {
+   "file": "thomasmustier-pi-for-excel-sessions-2026-02-21T13-39-27-761Z_4f8b7c02-d954-4e82-b944-f32b0a51218a.jsonl",
+   "src": "thomasmustier/pi-for-excel-sessions",
+   "licence": "MIT",
+   "tokens": 141359,
+   "sid": "ca8d02f834",
+   "sha256": "8f1582d5de2a6617cf831bf91b6b61cfbf22fc39d0f27629fabf6c93c9a11522"
+  },
+  {
+   "file": "thomasmustier-pi-mono-sessions-2026-02-06T10-59-09-998Z_d0724283-a80c-4c77-8f89-eb20fd64d55f.jsonl",
+   "src": "thomasmustier/pi-mono-sessions",
+   "licence": "MIT",
+   "tokens": 124152,
+   "sid": "0524f79bcc",
+   "sha256": "59ad2d40ff843b4d7b8debe946417579aba4134bae2753025744944ae9871b4d"
+  },
+  {
+   "file": "thomasmustier-economist-tui-sessions-2026-01-22T14-03-35-801Z_1bf2acbc-6df3-49a5-848e-cec2fd74f3b3.jsonl",
+   "src": "thomasmustier/economist-tui-sessions",
+   "licence": "MIT",
+   "tokens": 108199,
+   "sid": "2c6f7071cf",
+   "sha256": "f1846c4c9a193193070513da038d5dadf1e1b6efa1b8f24b915c95506497565c"
+  },
+  {
+   "file": "woxQAQ-pi-web-2026-05-09T08-16-56-010Z_6925be78-0704-40de-9fab-ac57a805738f.jsonl",
+   "src": "woxQAQ/pi-web",
+   "licence": "MIT",
+   "tokens": 208902,
+   "sid": "4f0d38ac56",
+   "sha256": "c1470facffc8af51eccffa43f7a149aa174e129d315651577cdb3ca00c392a40"
+  },
+  {
+   "file": "thomasmustier-pi-extensions-sessions-2026-01-09T04-23-41-908Z_d587978d-2228-46c3-aac4-7950c2055680.jsonl",
+   "src": "thomasmustier/pi-extensions-sessions",
+   "licence": "MIT",
+   "tokens": 104732,
+   "sid": "9d27998920",
+   "sha256": "ccc9199e0af18c80f15960f9239dcdc7873d619f06ae17197e624cb62f8d5990"
+  },
+  {
+   "file": "thomasmustier-pi-for-excel-sessions-2026-02-15T12-09-35-967Z_ee44a7e3-f25b-49b0-8094-3ae122706e61.jsonl",
+   "src": "thomasmustier/pi-for-excel-sessions",
+   "licence": "MIT",
+   "tokens": 147964,
+   "sid": "b83b3853fc",
+   "sha256": "92ad0ba77f39c191d51d3537c57d6de4c0e547c3ba0c7db32ecd5cdcf0330f35"
+  },
+  {
+   "file": "thomasmustier-pi-for-excel-sessions-2026-02-13T01-44-39-102Z_23c509f2-bafb-485b-b1ab-db05d6105d55.jsonl",
+   "src": "thomasmustier/pi-for-excel-sessions",
+   "licence": "MIT",
+   "tokens": 143202,
+   "sid": "bb169ee8ea",
+   "sha256": "28dba459f04853281eb9ca5744fd7b73a65357d0ac03e3377abcadcdd0438cdc"
+  },
+  {
+   "file": "thomasmustier-pi-extensions-sessions-2026-01-07T15-04-31-672Z_6b5430c1-093c-4e53-9f7a-ee345dc7b2f6.jsonl",
+   "src": "thomasmustier/pi-extensions-sessions",
+   "licence": "MIT",
+   "tokens": 116649,
+   "sid": "f783f8f727",
+   "sha256": "2d5b0ea1002db08ce34f6d0e5485e1b92d8f0cef2da5e33bd4b1637e97f43e09"
+  }
+ ],
+ "dataset": {
+  "repo": "MaxDevv/real-pi-coding-agent-traces-sessions",
+  "type": "dataset",
+  "url": "https://huggingface.co/datasets/MaxDevv/real-pi-coding-agent-traces-sessions"
+ }
+}

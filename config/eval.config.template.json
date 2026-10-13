@@ -1,0 +1,124 @@
+{
+  "_comment": "Generated from replication.config.json by scripts/setup.py; edit that file instead. Machine-specific fields are filled in by the setup.",
+  "pi": {
+    "bin": "<filled by scripts/setup.py>",
+    "package_dir": "<filled by scripts/setup.py>",
+    "settings_file": "<filled by scripts/setup.py>",
+    "models_file": "config/pi-models.json",
+    "keep_recent_tokens": 20000,
+    "reserve_tokens": 32768,
+    "session_version": 3,
+    "version": "1.0.3"
+  },
+  "model": {
+    "provider": "llama.cpp",
+    "id": "unsloth/Qwen3.8-27B-GGUF:UD-Q6_K_XL",
+    "context_window": 128000,
+    "thinking_level": "xhigh",
+    "sampling_params": {
+      "temperature": 1.0,
+      "top_k": 20,
+      "top_p": 0.95,
+      "seed": 20261004
+    },
+    "sampling_note": "Recommended sampling with a fixed seed via per-request samplingParams in config/pi-models.json (llama-server unchanged). Greedy decoding (the Stage 4 choice) was dropped during the EC run: an A0 probe fell into a thinking repetition loop until the 30-min timeout. See SETUP.md SAMPLING_SETUP."
+  },
+  "schedule": {
+    "_comment": "The paper's runs shared a server and were limited to a nightly window; the replication scripts set CEVAL_IGNORE_WINDOW=1, so this window does not apply.",
+    "tz": "UTC",
+    "start": "00:00",
+    "end": "00:00",
+    "pause_file": "runs/PAUSE"
+  },
+  "tokens": {
+    "chars_per_token": 3.6
+  },
+  "extension": {
+    "_registry_comment": "Extensions an arm can load (arms.<arm>.extensions). install 'copy': the file is copied into the arm's wd/.pi/extensions/ (verbatim); 'in-place': loaded from its cloned repository with its own node_modules (pi-vcc). scripts/setup.py fills in the cloned paths. The bridge loads exactly the arm's list.",
+    "registry": {
+      "pi-vcc": {
+        "source": "<filled by scripts/setup.py: vendor/repos/pi-vcc>",
+        "install": "in-place",
+        "compactor": "vcc"
+      },
+      "verbatim": {
+        "source": "<filled by scripts/setup.py: the extension in vendor/repos/verbatim>",
+        "install": "copy",
+        "compactor": "mech"
+      }
+    }
+  },
+  "fold": {
+    "_comment": "pi-fold arm (docs/build/comparison-arms.md). Run as shipped (decided 2026-10-06): options is empty, so registerPiFold uses its defaults (maxTarget 0.80, minTarget 0.20, budget = window - min(16384, 10% of window)). The study model is declared with a 128k window (config/pi-models.json), as for every arm, so the budget is 128000 - 12800 = 115200: a commit fires at >= 92160 tokens and aims at 23040. pi-fold commits only in the context hook of a measured turn, so each round ends with the commit turn: two prompts in one bridge process (the first reply's provider usage is the measurement pi-fold requires; the second prompt's context hook commits). If a commit does not fire, the treatment check records it; nothing is tuned.",
+    "options": {
+      "providerInputBudget": 72000
+    },
+    "_options_comment": "providerInputBudget 72000 (the user's decision, 2026-10-06: tell pi-fold the window is smaller so that it folds at every round end). With pi-fold's default thresholds the trigger is 0.80 x 72000 = 57600 tokens and the target 0.20 x 72000 = 14400. At the 128k default (budget 115200, trigger 92160) the first smoke run folded round 1 from 95.7k to 8.8k provider tokens, so round 2 would end near 63-66k, under the trigger, and not fold. All other pi-fold settings are its defaults.",
+    "commit": "turn",
+    "command": "/fold",
+    "_commit_comment": "commit 'turn' (used): commit_messages run in one bridge process; pi-fold folds in the second prompt's context hook if the first reply measured occupancy >= its trigger. commit 'command' (tried 2026-10-06, not usable as shipped): bare /fold commits only staged marks, and pi-fold stages marks only inside an automatic commit (a measured reply at >= maxTarget), so on synthetic history /fold finds nothing to commit ('nothing-proposable'). Forcing a fold would need changing pi-fold's thresholds, which the study does not do.",
+    "commit_messages": [
+      "Checkpoint. Reply with OK.",
+      "Checkpoint. Reply with OK."
+    ]
+  },
+  "vcc": {
+    "_comment": "pi-vcc arm (secondary, added after prereg-v2: DEVIATIONS.md; docs/build/comparison-arms.md). Run as shipped: no pi-vcc config is written by the harness; the package scaffolds its defaults (overrideDefaultCompaction true, debug false, no thresholds) into PI_VCC_CONFIG_PATH, which the harness points into the line's private HOME (driver.vcc_config_path) so nothing is written to the real ~/.pi/agent. With no thresholds configured, its proactive trigger never fires; compactions come only from the harness's session.compact() at each round end, as for the other arms."
+  },
+  "usage_proxy": {
+    "_comment": "Token and time accounting for every model call (harness/src/ceval/usageproxy.py): the runner forwards pi's requests through a local proxy to this upstream and records the usage the server reports. Needed because pi's session file omits extension and summary calls and the server's /metrics is disabled.",
+    "enabled": true,
+    "upstream": "http://127.0.0.1:8080"
+  },
+  "bridge": {
+    "node_bin": "<filled by scripts/setup.py>",
+    "script": "harness/bridge/pi-bridge.mjs",
+    "turn_timeout_s": 1800,
+    "compact_timeout_s": 900
+  },
+  "run": {
+    "probe_mode": "batched",
+    "single_mode_subset": 0.2,
+    "replicates": 1,
+    "replicate_subset": 0.2,
+    "matched_summary_chars": 8732,
+    "matched_summary_chars_by_round": "12280,28560,41166",
+    "runs_dir": "runs",
+    "results_dir": "results"
+  },
+  "_arms_comment": "extensions: the registry names the arm loads (exactly these; [] loads none). compactor: what must have produced the arm's compaction rows ('pi' = pi's own summary; else a registry compactor), checked per row (treatment check). commit_turn: no pi compaction; one fixed short turn per round on the main line instead (pi-fold folds in its context hook). compact_timeout_s overrides bridge.compact_timeout_s.",
+  "arms": {
+    "none": {
+      "compact": false,
+      "extensions": [],
+      "env": {},
+      "skill": false,
+      "compactor": null
+    },
+    "pi-default": {
+      "compact": true,
+      "extensions": [],
+      "env": {},
+      "skill": false,
+      "compactor": "pi"
+    },
+    "verbatim": {
+      "compact": true,
+      "extensions": [
+        "verbatim"
+      ],
+      "env": {},
+      "skill": "<filled by scripts/setup.py: the skill in vendor/repos/verbatim>",
+      "compactor": "mech"
+    },
+    "pi-vcc": {
+      "compact": true,
+      "extensions": [
+        "pi-vcc"
+      ],
+      "env": {},
+      "skill": false,
+      "compactor": "vcc"
+    }
+  }
+}

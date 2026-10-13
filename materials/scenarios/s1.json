@@ -1,0 +1,63 @@
+{
+  "experiment": "S1",
+  "description": "Study 1 (PROTOCOL.md 5.1): six debugging stories, each with its own plot skeleton (harness/src/ceval/stories.py), two sessions per story; 17 planted details and 3 lures per session; 3 rounds of realistic work, each opened by a competing episode and followed by a compaction and a probe. plant_tokens and round_tokens are real tokens, converted with the measured chars_per_token (docs/build/stories-tokcheck.txt). Extended to 18 sessions on 2026-10-06 (3 fact-value sets per story; sessions 12-17 appended, sessions 0-11 unchanged).",
+  "generator": "stories",
+  "seed": 5101,
+  "n_sessions": 18,
+  "session_story": [
+    "export",
+    "export",
+    "ci",
+    "ci",
+    "migration",
+    "migration",
+    "leak",
+    "leak",
+    "rollback",
+    "rollback",
+    "thumbs",
+    "thumbs",
+    "export",
+    "ci",
+    "migration",
+    "leak",
+    "rollback",
+    "thumbs"
+  ],
+  "rounds": 3,
+  "plant_tokens": 10000,
+  "round_tokens": [
+    79000,
+    57000,
+    57000
+  ],
+  "chars_per_token": 3.38,
+  "chars_per_token_by_category": {
+    "tool_output": 3.32,
+    "tool_args": 3.74,
+    "user": 3.85,
+    "assistant_text": 3.69,
+    "thinking": 4.46
+  },
+  "round_details": 0,
+  "probe_batch_size": 10,
+  "partial_followup": true,
+  "probe_hidden_tools": [
+    "dump_context"
+  ],
+  "arms": [
+    "none",
+    "pi-default",
+    "mech",
+    "pi-lcm",
+    "pi-fold",
+    "pi-vcc"
+  ],
+  "a0_rounds": [
+    1
+  ],
+  "probe_builtin_tools": false,
+  "single_mode_subset": 0.0,
+  "replicates": 1,
+  "probe_fork": "full"
+}
