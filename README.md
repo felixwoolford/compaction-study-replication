@@ -1,10 +1,12 @@
-# Verbatim compaction: replication package (Studies 1 and 4)
+# Transparent compaction: replication package (Studies 1 and 4)
 
 This package re-runs the two main studies of the paper on compaction for the [pi coding agent](https://github.com/earendil-works/pi-coding-agent) (arXiv link to be added) with your own model and pi setup. It compares three ways of compacting an agent's context:
 
-- **verbatim** ([felixwoolford/verbatim-compact-pi](https://github.com/felixwoolford/verbatim-compact-pi)) keeps the user's and agent's words verbatim and makes the full history retrievable.
+- **transparent compaction** ([felixwoolford/transparent-compact-pi](https://github.com/felixwoolford/transparent-compact-pi)) keeps the user's and agent's words verbatim and makes the full history retrievable.
 - **pi-default** is pi's built-in compaction: the model writes a summary.
 - **pi-vcc** ([monotykamary/pi-vcc](https://github.com/monotykamary/pi-vcc)) is a third-party compactor that builds its summary by rule-based extraction.
+
+The harness retains `verbatim` as the internal arm ID for transparent compaction in configuration, output labels and paths. Both extensions remain pinned to the paper's original commits; the repository rename does not change the version used.
 
 The two studies:
 
@@ -24,7 +26,7 @@ Run all commands from the repository root. Each script changes to the right dire
 ```bash
 uv sync                                     # Python environment (uv installs Python 3.14 if needed)
 $EDITOR replication.config.json             # your pi install, your model, your judge (see "Configuration")
-uv run python scripts/setup.py              # generates config/; clones verbatim and pi-vcc into vendor/repos/
+uv run python scripts/setup.py              # generates config/; clones transparent compaction and pi-vcc into vendor/repos/
 ```
 
 **Check the installation first, with no model and no API key (about 10 minutes):**
@@ -32,10 +34,10 @@ uv run python scripts/setup.py              # generates config/; clones verbatim
 ```bash
 uv run python scripts/download_sessions.py  # fetches Study 4's 18 sessions; checks SHA-256
 uv run python scripts/run_s4.py replay      # compacts the sessions (pi-default calls your model; see note)
-uv run python scripts/verify_replays.py     # expected: "identical to the paper" for verbatim and pi-vcc
+uv run python scripts/verify_replays.py     # expected: "identical to the paper" for transparent compaction and pi-vcc
 ```
 
-The verbatim and pi-vcc replays make no model calls. pi-default's replay calls your model to write its summaries; to skip that part of the check, temporarily set `"study4": {"arms": ["verbatim", "pi-vcc"]}`. If `verify_replays.py` reports both as identical, pi, the two extensions and the session data are all working.
+The transparent compaction and pi-vcc replays make no model calls. pi-default's replay calls your model to write its summaries; to skip that part of the check, temporarily set `"study4": {"arms": ["verbatim", "pi-vcc"]}`. If `verify_replays.py` reports both as identical, pi, the two extensions and the session data are all working.
 
 **Study 1:**
 
@@ -88,7 +90,7 @@ Every step can be interrupted and resumed by running the same command again. Fin
 
 | section | what it sets | paper's value |
 |---|---|---|
-| `extensions` | repository and commit for verbatim and pi-vcc | verbatim `6b970d3`, pi-vcc `fd2603e` (release 0.8.12) |
+| `extensions` | repository and commit for transparent compaction and pi-vcc | transparent compaction `6b970d3`, pi-vcc `fd2603e` (release 0.8.12) |
 | `pi` | `package_dir` (the installed pi package), `agent_dir` (your pi auth and settings, read only), `version` | 1.1.0 |
 | `model.kind` | `openai-completions` for a server you run, `builtin` for a provider pi knows | `openai-completions` |
 | `model.provider`, `id`, `base_url`, `api_key` | how pi reaches the model | `llama.cpp`, Qwen 3.8 27B, `http://127.0.0.1:8080/v1` |
@@ -137,7 +139,7 @@ Every step can be interrupted and resumed by running the same command again. Fin
 |---|---|---|
 | 1 | `results/<experiment>/trials.jsonl`, `compactions.jsonl` | every probe answer and every compaction |
 | 1 | `results/<experiment>/scored.jsonl` | answers scored by rule |
-| 1 | `results/<experiment>/replication-analysis.json` | recall and confident-wrong rates per arm; paired sign-flip tests across sessions of verbatim against each other arm |
+| 1 | `results/<experiment>/replication-analysis.json` | recall and confident-wrong rates per arm; paired sign-flip tests across sessions of transparent compaction against each other arm |
 | 4 | `runs/S4/replay/rows-<arm>-48k.jsonl` | every replay compaction |
 | 4 | `results/S4/runs-rep<i>.jsonl` | every probe turn, one file per repetition |
 | 4 | `runs/S4/replies-rep<i>/` | the replies |
@@ -152,15 +154,15 @@ Study 4 runs its probes through the harness's `study3` module: it was built on S
 
 **Reference values from the paper.** Study 4 figures are on 27 probes, repetitions 1–3, with failed turns counted as failures.
 
-| Study 1 recall | verbatim | pi-default | pi-vcc |
+| Study 1 recall | transparent compaction | pi-default | pi-vcc |
 |---|---|---|---|
 | Qwen 3.8 27B | 97.8%* | 75.3% | 98.2% |
 | GPT-6 Luna | 95.1% | 55.0% | 45.6% |
 | Gemma 4 31B | 93.3% | 51.5% | 67.5% |
 
-\* The paper's Study 1 on Qwen ran an earlier version of verbatim (with pi 1.0.3), before the release at `6b970d3`. This package runs the release for every study and model. Its Study 1 performance is expected to be equivalent: on Luna and Gemma the release recalled 95.1% and 93.3%.
+\* The paper's Study 1 on Qwen ran an earlier version of transparent compaction (with pi 1.0.3), before the release at `6b970d3`. This package runs the release for every study and model. Its Study 1 performance is expected to be equivalent: on Luna and Gemma the release recalled 95.1% and 93.3%.
 
-| Study 4 pass rate | verbatim | pi-default | pi-vcc |
+| Study 4 pass rate | transparent compaction | pi-default | pi-vcc |
 |---|---|---|---|
 | Qwen 3.8 27B | 74.1% | 64.2% | 53.1% |
 | GPT-6 Luna | 46.9% | 30.9% | 28.4% |
@@ -175,7 +177,7 @@ Study 4 runs its probes through the harness's `study3` module: it was built on S
 
 ## Differences from the paper
 
-- **Study 1 on Qwen** used an earlier version of verbatim; see the note under the Study 1 table.
+- **Study 1 on Qwen** used an earlier version of transparent compaction; see the note under the Study 1 table.
 - **pi-default's Study 4 replay** declares 72,576 tokens with a 32,768-token reserve.
   - The trigger point (39,808 tokens) and the 8,000 kept tokens are the same as for the other arms.
   - At the stock 48k settings, pi caps its summary at 0.8 × reserve = 6,553 tokens. A reasoning model at high effort can spend all of that on thinking, and the compaction then fails: 15 of 16 sessions for Qwen at xhigh.
@@ -208,7 +210,7 @@ Study 4 runs its probes through the harness's `study3` module: it was built on S
   - They are not redistributed here. `scripts/download_sessions.py` fetches them and checks their hashes.
 - **The probes** (`materials/s4/probes.json`) were written for this study and quote short strings from those sessions. See `NOTICE.md`.
 - **Study 1's material** is fully synthetic, generated from `materials/scenarios/s1.json`.
-- **verbatim and pi-vcc** are cloned from their own repositories and are under their own licences.
+- **Transparent compaction and pi-vcc** are cloned from their own repositories and are under their own licences.
 
 ## Layout
 
