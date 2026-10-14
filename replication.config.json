@@ -32,7 +32,7 @@
 
   "extensions": {
     "_comment": "Cloned from their repositories by scripts/setup.py into vendor/repos/ and checked out at these commits. The defaults are the exact versions the paper ran: verbatim 6b970d3 (the pinned release) and pi-vcc fd2603e (0.8.12). Set a newer commit (or a branch) to test another version.",
-    "verbatim": {"repo": "https://github.com/felixwoolford/verbatim-compact-pi", "commit": "6b970d3"},
+    "verbatim": {"repo": "https://github.com/felixwoolford/transparent-compact-pi", "commit": "6b970d3"},
     "pi-vcc": {"repo": "https://github.com/monotykamary/pi-vcc", "commit": "fd2603e"}
   },
 
